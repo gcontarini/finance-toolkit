@@ -1,59 +1,63 @@
 import pandas as pd
 
-def macd(data, slow, fast, ma, full_output=False):
-	""" 
-	Calculate moving average convergence 
-	divergence (MACD) for a given time series 
-	(usually close prices).
-
-	Parameters
-	----------
-	series: pd.Series/pd.DataFrame
-		Series or dataframe to calculate MACD.
-		If df is passed, it must have a close or
-		 adjusted close column in the following column name:
-		 	- Close
-		 	- close
-		 	- Adj Close
-		 	- adj close
-	slow: int
-		How many observations the slow line will look back
-	fast: int
-		How many obversations the fast line will look back
-	ma: int
-		How many obversations will be used to calculate moving average
-	full_output: bool
-		Returns input data and support series used in calculation
-
-	Returns
-	----------
-	pd.DataFrame
-		With columns MACD_line and MACD_signal
-		For full output, slow_ma and fast_ma are shown too
-	"""
+def macd_line(data, slow, fast, ma, full_output=False):
+    """ 
+    Calculate moving average convergence 
+    divergence (MACD) for a given time series 
+    (usually close prices).
+    Parameters
+    ----------
+    series: pd.Series/pd.DataFrame
+        Series or dataframe to calculate MACD.
+        If df is passed, it must have a close or
+        adjusted close column in the following column name:
+           - Close
+           - close
+           - Adj Close
+           - adj close
+    
+    slow: int
+        How many observations the slow line will look back
+    fast: int
+        How many obversations the fast line will look back
+    ma: int
+        How many obversations will be used to calculate moving average
+    full_output: bool
+        Returns input data and support series used in calculation
+    Returns
+    ----------
+    pd.DataFrame
+        With columns macd_line and macd_signal
+        For full output, slow_ma and fast_ma are shown too
+    """
     
     # Handles input data
     if isinstance(data, pd.DataFrame):
-    	# All possibles names for close column
-    	possible_cols = ['Close', 'close', 'Adj Close', 'Close']
-    	# Select them
-    	col = [col in data.columns for col in possible_cols]
-    	# Only the first column with the close name will be taken
-       	series = data[col[0]].copy()
+        # All possibles names for close column
+        possible_cols = ['Close', 'close', 'Adj Close', 'adj close']
+        # Select them
+        cols = cols = [col for col in data.columns if col in possible_cols]
+        # Check if there's only one close column
+        if len(cols) > 1:
+            raise KeyError('Ambiguous number of possible close prices column.')
+        elif len(cols) == 0:
+            raise IndexError('No close column. Pass desired column as a pd.Series.')
+        # Copy data as series
+        series = data[cols[0]].copy()
 
     elif isinstance(data, pd.Series):
-    	series = data.copy()
+        series = data.copy()
     
     else:
-    	raise TypeError('Input data is not a pandas Series or DataFrame.')
+        raise TypeError('Input data is not a pandas Series or DataFrame.')
 
     # Handles parameters inputs
     for parameter in [slow, fast, ma]:
-    	if isinstance(parameter, int):
-    		raise TypeError('One or more parameters are not integer type.')
+        if not isinstance(parameter, int):
+            raise TypeError('One or more parameters are not integer type.')
     
-    if slow >= fast:
-    	raise ValueError('Slow line must have a value bigger than fast line.')
+    if slow <= fast:
+        raise ValueError('Slow line must have a value bigger than fast line')
 
     full_df = pd.DataFrame()
 
@@ -65,9 +69,9 @@ def macd(data, slow, fast, ma, full_output=False):
     
     # Prepares return df
     if full_output == True:
-    	df = data.copy()
-    	df = pd.concat(df, full_df, axis=1)
+        df = data.copy()
+        df = pd.concat([df, full_df], axis=1)
     else:
-    	df = full_df[['macd_line', 'macd_signal']]
+        df = full_df[['macd_line', 'macd_signal']]
     
     return df
