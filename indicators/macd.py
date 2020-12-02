@@ -1,13 +1,13 @@
 import pandas as pd
 
-def macd_line(data, slow, fast, ma, full_output=False):
+def MACD(data, slow, fast, ma, full_output=False):
     """ 
     Calculate moving average convergence 
     divergence (MACD) for a given time series 
     (usually close prices).
     Parameters
     ----------
-    series: pd.Series/pd.DataFrame
+    data: pd.Series/pd.DataFrame
         Series or dataframe to calculate MACD.
         If df is passed, it must have a close or
         adjusted close column in the following column name:
