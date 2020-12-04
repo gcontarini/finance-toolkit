@@ -2,7 +2,7 @@ import pandas as pd
 
 def ATR(data, ma, full_output=False):
     """ 
-    Calculate average true range (ATR) for a given time series.
+    Calculate average true range (ATR) for a given ohlc data.
     Parameters
     ----------
     data: pd.DataFrame
@@ -22,9 +22,11 @@ def ATR(data, ma, full_output=False):
     if not isinstance(data, pd.DataFrame):
         raise TypeError('Input data is not a pandas DataFrame.')
 
-    if ['High', 'Low', 'Close'] not in data.columns:
+    # Check this condition
+    if not (['High', 'Low', 'Close'] in data.columns).all():
         raise IndexError('Missing necessary columns (High, Low or Close).')
 
+    # Handles parameter input
     if not isinstance(ma, int):
         raise TypeError('ma parameter is not integer type.')
 
