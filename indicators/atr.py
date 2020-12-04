@@ -22,8 +22,7 @@ def ATR(data, ma, full_output=False):
     if not isinstance(data, pd.DataFrame):
         raise TypeError('Input data is not a pandas DataFrame.')
 
-    # Check this condition
-    if not (['High', 'Low', 'Close'] in data.columns).all():
+    if not set(['High', 'Low', 'Close']).issubset(data.columns):
         raise IndexError('Missing necessary columns (High, Low or Close).')
 
     # Handles parameter input
