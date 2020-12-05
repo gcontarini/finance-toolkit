@@ -10,12 +10,11 @@ def MACD(data, slow, fast, ma, full_output=False):
     data: pd.Series/pd.DataFrame
         Series or dataframe to calculate MACD.
         If df is passed, it must have a close or
-        adjusted close column in the following column name:
+        adjusted close column with the following labels:
            - Close
            - close
            - Adj Close
            - adj close
-    
     slow: int
         How many observations the slow line will look back
     fast: int
@@ -27,8 +26,8 @@ def MACD(data, slow, fast, ma, full_output=False):
     Returns
     ----------
     pd.DataFrame
-        With columns macd_line and macd_signal
-        For full output, slow_ma and fast_ma are shown too
+        With columns macd_line and macd_signal.
+        For full output, slow_ma and fast_ma are shown too.
     """
     
     # Handles input data
