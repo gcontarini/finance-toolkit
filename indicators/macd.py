@@ -26,8 +26,8 @@ def MACD(data, slow, fast, ma, full_output=False):
     Returns
     ----------
     pd.DataFrame
-        With columns macd_line and macd_signal.
-        For full output, slow_ma and fast_ma are shown too.
+        With columns macd_line and macd_signal
+        For full output, slow_ma and fast_ma are shown too
     """
     
     # Handles input data
