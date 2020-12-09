@@ -71,7 +71,7 @@ class ResultsBollBand(unittest.TestCase):
         self.assertEqual(self.test_data_df.shape[1]+3, results.shape[1])
 
 # Test input data
-class BadInputMACD(unittest.TestCase):
+class BadInputBollBand(unittest.TestCase):
   # Input data
   test_data = pd.read_csv('test_data/correct_series.csv')
   test_data_list = list(test_data.values)
