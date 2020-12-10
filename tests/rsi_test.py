@@ -64,7 +64,7 @@ class BadInputRSI(unittest.TestCase):
     self.assertRaises(TypeError, rsi.RSI, self.test_data, 11.59)
 
   def test_input_data_not_series_or_df(self):
-    '''if data is not an valid type should raise TypeError'''
+    '''if data is not a valid type should raise TypeError'''
     self.assertRaises(TypeError, rsi.RSI, self.test_data_list, self.ma)
 
   def test_df_no_close_column(self):
