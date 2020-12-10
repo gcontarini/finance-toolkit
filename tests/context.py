@@ -11,3 +11,4 @@ import macd
 import atr
 import bollinger_band
 import rsi
+import adx
