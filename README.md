@@ -1,17 +1,17 @@
 # finance-toolkit
 A collection of scripts and functions useful for financial analysis. The repository includes an indicators folder for technical indicators, a KPIs folder for performance measures, and a scraper script to download fundamental data from the yahoo finance webpage for a given stock. All modules have unit tests in the tests folder.
 
-# Needed packages (NOT FINISHED)
+### Needed packages (NOT FINISHED)
 - Python 3
 - Pandas
 - Beautiful Soap
 - Selenium
 - Working in progress...
 
-# Indicators list
+### Indicators list
 ...
 
-# KPIs list
+### KPIs list
 ...
 
 ## Goals
