@@ -4,9 +4,15 @@ A collection of scripts and functions useful for financial analysis. The reposit
 # Needed packages (NOT FINISHED)
 - Python 3
 - Pandas
-- Beatiful Soap
+- Beautiful Soap
 - Selenium
 - Working in progress...
+
+# Indicators list
+...
+
+# KPIs list
+...
 
 ## Goals
 My goal in doing this project is to organize and share some functions that I've been using. Also, it's an opportunity to learn about how to implement unit tests. In the future, I'll include a docker image to run the tests in a container.
