@@ -1,6 +1,6 @@
 import unittest
 import pandas as pd
-from context import atr
+from context import technical as ti
 
 # Test results and outputs
 class ResultsATR(unittest.TestCase):
@@ -44,27 +44,27 @@ class ResultsATR(unittest.TestCase):
 
     def test_result_atr(self):
         '''results must matches what is expected for atr series'''
-        result = atr.ATR(self.test_data, self.ma)
+        result = ti.ATR(self.test_data, self.ma)
         pd.testing.assert_series_equal(self.result_atr, result['atr'], check_names=False)
 
     def test_result_tr(self):
         '''results must matches what is expected for tr series'''
-        result = atr.ATR(self.test_data, self.ma)
+        result = ti.ATR(self.test_data, self.ma)
         pd.testing.assert_series_equal(self.result_tr, result['tr'], check_names=False)
 
     def test_result_df_lenght(self):
         '''results df are the expected lenght'''
-        result = atr.ATR(self.test_data, self.ma)
+        result = ti.ATR(self.test_data, self.ma)
         self.assertEqual(self.test_data.shape[0], result.shape[0])
 
     def test_result_df_columns_number(self):
         '''results df must have expected number of columns (2)'''
-        result = atr.ATR(self.test_data, self.ma)
+        result = ti.ATR(self.test_data, self.ma)
         self.assertEqual(2, result.shape[1])
 
     def test_result_df_columns_number_full(self):
         '''results df must have expected number of columns for full output (original plus 5)'''
-        result = atr.ATR(self.test_data, self.ma, full_output=True)
+        result = ti.ATR(self.test_data, self.ma, full_output=True)
         self.assertEqual(self.test_data.shape[1] + 5, result.shape[1])
 
 # Test input data
@@ -79,15 +79,15 @@ class BadInputATR(unittest.TestCase):
 
     def test_ma_not_integer(self):
         '''if ma parameter is not integer should raise TypeError'''
-        self.assertRaises(TypeError, atr.ATR, self.test_data, 12.7)
+        self.assertRaises(TypeError, ti.ATR, self.test_data, 12.7)
 
     def test_input_data_not_df(self):
         '''if data input is not df should raise TypeError'''
-        self.assertRaises(TypeError, atr.ATR, self.test_wrong_type, self.ma)
+        self.assertRaises(TypeError, ti.ATR, self.test_wrong_type, self.ma)
 
     def test_input_data_missing_column(self):
         '''if data input is missing a column or it's labeled wrong should raise IndexError'''
-        self.assertRaises(IndexError, atr.ATR, self.test_missing_column, self.ma)
+        self.assertRaises(IndexError, ti.ATR, self.test_missing_column, self.ma)
 
 
 if __name__ == '__main__':

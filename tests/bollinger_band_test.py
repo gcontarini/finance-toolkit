@@ -1,6 +1,6 @@
 import unittest
 import pandas as pd
-from context import bollinger_band
+from context import technical as ti
 
 # Test results
 class ResultsBollBand(unittest.TestCase):
@@ -40,34 +40,34 @@ class ResultsBollBand(unittest.TestCase):
 
     def test_result_up(self):
         '''bollband function must return up line with values equal to expected'''
-        results = bollinger_band.bollband(self.test_data, self.ma)
+        results = ti.bollband(self.test_data, self.ma)
         pd.testing.assert_series_equal(self.results_up, results['bollband_up'], check_names=False)
 
     def test_result_low(self):
         '''bollband function must return low line with values equal to expected'''
-        results = bollinger_band.bollband(self.test_data, self.ma)
+        results = ti.bollband(self.test_data, self.ma)
         pd.testing.assert_series_equal(self.results_low, results['bollband_low'], check_names=False)
 
     def test_result_df_lenght(self):
         '''bollband result must have the expected lenght'''
-        results = bollinger_band.bollband(self.test_data, self.ma)
+        results = ti.bollband(self.test_data, self.ma)
         self.assertEqual(self.results_up.shape[0], results.shape[0])
 
     def test_result_df_columns_number(self):
         '''bollband result must have the expected columns number'''
-        results = bollinger_band.bollband(self.test_data, self.ma)
+        results = ti.bollband(self.test_data, self.ma)
         self.assertEqual(2, results.shape[1])
 
     def test_result_df_columns_number_full(self):
         '''bollband result must have the expected columns number for full output'''
         series_og_columns = 2
         result_columns = 3
-        results = bollinger_band.bollband(self.test_data, self.ma, full_output=True)
+        results = ti.bollband(self.test_data, self.ma, full_output=True)
         self.assertEqual(series_og_columns+result_columns, results.shape[1])
 
     def test_result_df_columns_number_full_if_df(self):
         '''bollband result must have the expected columns number for full output if input data is ohlc'''
-        results = bollinger_band.bollband(self.test_data_df, self.ma, full_output=True)
+        results = ti.bollband(self.test_data_df, self.ma, full_output=True)
         self.assertEqual(self.test_data_df.shape[1]+3, results.shape[1])
 
 # Test input data
@@ -83,19 +83,19 @@ class BadInputBollBand(unittest.TestCase):
 
   def test_parameter_not_int(self):
     '''if ma is not integer should raise TypeError'''
-    self.assertRaises(TypeError, bollinger_band.bollband, self.test_data, 11.59)
+    self.assertRaises(TypeError, ti.bollband, self.test_data, 11.59)
 
   def test_input_data_not_series_or_df(self):
     '''if data is not an valid type should raise TypeError'''
-    self.assertRaises(TypeError, bollinger_band.bollband, self.test_data_list, self.ma)
+    self.assertRaises(TypeError, ti.bollband, self.test_data_list, self.ma)
 
   def test_df_no_close_column(self):
     '''if df has not close column than should raise IndexError'''
-    self.assertRaises(IndexError, bollinger_band.bollband, self.test_data_df_no_close, self.ma)
+    self.assertRaises(IndexError, ti.bollband, self.test_data_df_no_close, self.ma)
 
   def test_df_more_than_one_close_column(self):
     '''if df has more than one close column than should raise KeyError'''
-    self.assertRaises(KeyError, bollinger_band.bollband, self.test_data_df_more_close, self.ma)
+    self.assertRaises(KeyError, ti.bollband, self.test_data_df_more_close, self.ma)
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,6 +1,6 @@
 import unittest
 import pandas as pd
-from context import macd
+from context import technical as ti
 
 # Test results and outputs
 class ResultsMACD(unittest.TestCase):
@@ -49,37 +49,37 @@ class ResultsMACD(unittest.TestCase):
     # Tests
     def test_result_macd_line(self):
         '''macd function must return macd line with values equal to expected'''
-        result = macd.MACD(self.test_data, self.slow, self.fast, self.ma)
+        result = ti.MACD(self.test_data, self.slow, self.fast, self.ma)
         pd.testing.assert_series_equal(self.results_line, result['macd_line'], check_names=False)
 
     def test_result_macd_signal(self):
         '''macd function must return macd signal with values equal to expected'''
-        result = macd.MACD(self.test_data, self.slow, self.fast, self.ma)
+        result = ti.MACD(self.test_data, self.slow, self.fast, self.ma)
         pd.testing.assert_series_equal(self.results_signal, result['macd_signal'], check_names=False)
 
     def test_result_macd_line_lenght_size(self):
         '''macd result line must have the same lenght as input'''
-        result = macd.MACD(self.test_data, self.slow, self.fast, self.ma)
+        result = ti.MACD(self.test_data, self.slow, self.fast, self.ma)
         self.assertEqual(self.results_line.shape[0], result.shape[0])
 
     def test_result_macd_signal_lenght_size(self):
         '''macd result signal must have the same lenght as input'''
-        result = macd.MACD(self.test_data, self.slow, self.fast, self.ma)
+        result = ti.MACD(self.test_data, self.slow, self.fast, self.ma)
         self.assertEqual(self.results_signal.shape[0], result.shape[0])
 
     def test_output_result_matrix_cols_number(self):
         '''macd result df must have 2 columns'''
-        result = macd.MACD(self.test_data, self.slow, self.fast, self.ma)
+        result = ti.MACD(self.test_data, self.slow, self.fast, self.ma)
         self.assertEqual(2, result.shape[1])
 
     def test_output_result_matrix_cols_number_full_if_input_series(self):
         '''macd result df must have original series plus 4'''
-        result = macd.MACD(self.test_data, self.slow, self.fast, self.ma, full_output=True)
+        result = ti.MACD(self.test_data, self.slow, self.fast, self.ma, full_output=True)
         self.assertEqual((2+4), result.shape[1])
 
     def test_output_result_matrix_cols_number_full_if_input_df(self):
         '''macd result df must have original df columns plus 4'''
-        result = macd.MACD(self.test_data_df, self.slow, self.fast, self.ma, full_output=True)
+        result = ti.MACD(self.test_data_df, self.slow, self.fast, self.ma, full_output=True)
         self.assertEqual((self.test_data_df.shape[1] + 4), result.shape[1])
 
 # Test input data
@@ -97,23 +97,23 @@ class BadInputMACD(unittest.TestCase):
 
   def test_parameter_not_int(self):
     '''all parameters must be integer type'''
-    self.assertRaises(TypeError, macd.MACD, self.test_data, 15.5, 9, 5)
+    self.assertRaises(TypeError, ti.MACD, self.test_data, 15.5, 9, 5)
 
   def test_input_data_not_series_or_df(self):
     '''input data must be a pd.DataFrame or pd.Series'''
-    self.assertRaises(TypeError, macd.MACD, self.test_data_list, self.slow, self.fast, self.ma)
+    self.assertRaises(TypeError, ti.MACD, self.test_data_list, self.slow, self.fast, self.ma)
 
   def test_slow_is_less_than_fast(self):
     '''slow parameter must be greater than fast'''
-    self.assertRaises(ValueError, macd.MACD, self.test_data, 12, 24, self.ma)
+    self.assertRaises(ValueError, ti.MACD, self.test_data, 12, 24, self.ma)
 
   def test_df_no_close_column(self):
     '''pd.DataFrame as input must have close column'''
-    self.assertRaises(IndexError, macd.MACD, self.test_data_df_no_close, self.slow, self.fast, self.ma)
+    self.assertRaises(IndexError, ti.MACD, self.test_data_df_no_close, self.slow, self.fast, self.ma)
 
   def test_df_more_than_one_close_column(self):
     '''pd.DataFrame as input must have only one close column'''
-    self.assertRaises(KeyError, macd.MACD, self.test_data_df_more_close, self.slow, self.fast, self.ma)
+    self.assertRaises(KeyError, ti.MACD, self.test_data_df_more_close, self.slow, self.fast, self.ma)
 
 if __name__ == '__main__':
     unittest.main()

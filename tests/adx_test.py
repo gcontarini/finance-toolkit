@@ -1,6 +1,6 @@
 import unittest
 import pandas as pd
-from context import adx
+from context import technical as ti
 
 # Test results
 class ResultsADX(unittest.TestCase):
@@ -39,29 +39,29 @@ class ResultsADX(unittest.TestCase):
 
     def test_result_adx(self):
         '''adx function must return series adx equal to expected'''
-        results = adx.ADX(self.test_data, self.ma)
+        results = ti.ADX(self.test_data, self.ma)
         pd.testing.assert_series_equal(self.results_adx, results['adx'], check_names=False)
 
     def test_result_dx(self):
         '''adx function must return series dx equal to expected'''
-        results = adx.ADX(self.test_data, self.ma)
+        results = ti.ADX(self.test_data, self.ma)
         pd.testing.assert_series_equal(self.results_dx, results['dx'], check_names=False)
 
     def test_result_df_lenght(self):
         '''adx result must have the expected lenght'''
-        results = adx.ADX(self.test_data, self.ma)
+        results = ti.ADX(self.test_data, self.ma)
         self.assertEqual(self.results_adx.shape[0], results.shape[0])
 
     def test_result_df_columns_number(self):
         '''adx result must have the expected columns number'''
-        results = adx.ADX(self.test_data, self.ma)
+        results = ti.ADX(self.test_data, self.ma)
         self.assertEqual(2, results.shape[1])
 
     def test_result_df_columns_number_full(self):
         '''adx result must have the expected columns number for full output'''
         ohlc_og_columns = self.test_data.shape[1]
         result_columns = 12
-        results = adx.ADX(self.test_data, self.ma, full_output=True)
+        results = ti.ADX(self.test_data, self.ma, full_output=True)
         self.assertEqual(ohlc_og_columns+result_columns, results.shape[1])
 
 # Test input data
@@ -76,15 +76,15 @@ class BadInputADX(unittest.TestCase):
 
   def test_parameter_not_int(self):
     '''if ma is not integer should raise TypeError'''
-    self.assertRaises(TypeError, adx.ADX, self.test_data, 11.59)
+    self.assertRaises(TypeError, ti.ADX, self.test_data, 11.59)
 
   def test_input_data_not_df(self):
     '''if data is not a valid type should raise TypeError'''
-    self.assertRaises(TypeError, adx.ADX, self.test_data_list, self.ma)
+    self.assertRaises(TypeError, ti.ADX, self.test_data_list, self.ma)
 
   def test_df_missing_column(self):
     '''if df has a missing column than should raise IndexError'''
-    self.assertRaises(IndexError, adx.ADX, self.test_data_missing_col, self.ma)
+    self.assertRaises(IndexError, ti.ADX, self.test_data_missing_col, self.ma)
 
 if __name__ == '__main__':
     unittest.main()

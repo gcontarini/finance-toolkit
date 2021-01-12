@@ -1,6 +1,6 @@
 import unittest
 import pandas as pd
-from context import rsi
+from context import technical as ti
 
 # Test results
 class ResultsRSI(unittest.TestCase):
@@ -27,25 +27,25 @@ class ResultsRSI(unittest.TestCase):
 
     def test_result_rsi(self):
         '''rsi function must return series equal to expected'''
-        results = rsi.RSI(self.test_data, self.ma)
+        results = ti.RSI(self.test_data, self.ma)
         pd.testing.assert_series_equal(self.results_rsi, results, check_names=False)
 
     def test_result_df_lenght(self):
         '''rsi result must have the expected lenght'''
-        results = rsi.RSI(self.test_data, self.ma)
+        results = ti.RSI(self.test_data, self.ma)
         self.assertEqual(self.results_rsi.shape[0], results.shape[0])
 
     def test_result_df_columns_number_full(self):
         '''rsi result must have the expected columns number for full output'''
         series_og_columns = 2
         result_columns = 5
-        results = rsi.RSI(self.test_data, self.ma, full_output=True)
+        results = ti.RSI(self.test_data, self.ma, full_output=True)
         self.assertEqual(series_og_columns+result_columns, results.shape[1])
 
     def test_result_df_columns_number_full_if_df(self):
         '''rsi result must have the expected columns number for full output if input data is ohlc'''
         result_columns = 5
-        results = rsi.RSI(self.test_data_df, self.ma, full_output=True)
+        results = ti.RSI(self.test_data_df, self.ma, full_output=True)
         self.assertEqual(self.test_data_df.shape[1]+result_columns, results.shape[1])
 
 # Test input data
@@ -61,19 +61,19 @@ class BadInputRSI(unittest.TestCase):
 
   def test_parameter_not_int(self):
     '''if ma is not integer should raise TypeError'''
-    self.assertRaises(TypeError, rsi.RSI, self.test_data, 11.59)
+    self.assertRaises(TypeError, ti.RSI, self.test_data, 11.59)
 
   def test_input_data_not_series_or_df(self):
     '''if data is not a valid type should raise TypeError'''
-    self.assertRaises(TypeError, rsi.RSI, self.test_data_list, self.ma)
+    self.assertRaises(TypeError, ti.RSI, self.test_data_list, self.ma)
 
   def test_df_no_close_column(self):
     '''if df has not close column than should raise IndexError'''
-    self.assertRaises(IndexError, rsi.RSI, self.test_data_df_no_close, self.ma)
+    self.assertRaises(IndexError, ti.RSI, self.test_data_df_no_close, self.ma)
 
   def test_df_more_than_one_close_column(self):
     '''if df has more than one close column than should raise KeyError'''
-    self.assertRaises(KeyError, rsi.RSI, self.test_data_df_more_close, self.ma)
+    self.assertRaises(KeyError, ti.RSI, self.test_data_df_more_close, self.ma)
 
 if __name__ == '__main__':
     unittest.main()

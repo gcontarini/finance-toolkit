@@ -1,6 +1,6 @@
 import unittest
 import pandas as pd
-from context import obv
+from context import technical as ti
 
 # Test results
 class ResultsOBV(unittest.TestCase):
@@ -23,24 +23,24 @@ class ResultsOBV(unittest.TestCase):
 
     def test_result_obv(self):
         '''obv function must return obv series equal to expected'''
-        results = obv.OBV(self.test_data)
+        results = ti.OBV(self.test_data)
         pd.testing.assert_series_equal(self.results_obv, results['obv'], check_names=False)
 
     def test_result_df_lenght(self):
         '''obv result must have the expected lenght'''
-        results = obv.OBV(self.test_data)
+        results = ti.OBV(self.test_data)
         self.assertEqual(self.results_obv.shape[0], results.shape[0])
 
     def test_result_df_columns_number(self):
         '''obv result must have the expected columns number'''
-        results = obv.OBV(self.test_data)
+        results = ti.OBV(self.test_data)
         self.assertEqual(1, results.shape[1])
 
     def test_result_df_columns_number_full(self):
         '''obv result must have the expected columns number for full output'''
         ohlc_og_columns = self.test_data.shape[1]
         result_columns = 3
-        results = obv.OBV(self.test_data, full_output=True)
+        results = ti.OBV(self.test_data, full_output=True)
         self.assertEqual(ohlc_og_columns+result_columns, results.shape[1])
 
 # Test input data
@@ -52,11 +52,11 @@ class BadInputOBV(unittest.TestCase):
 
   def test_input_data_not_df(self):
     '''if data is not a valid type should raise TypeError'''
-    self.assertRaises(TypeError, obv.OBV, self.test_data_list)
+    self.assertRaises(TypeError, ti.OBV, self.test_data_list)
 
   def test_df_missing_column(self):
     '''if df has a missing column than should raise IndexError'''
-    self.assertRaises(IndexError, obv.OBV, self.test_data_missing_col)
+    self.assertRaises(IndexError, ti.OBV, self.test_data_missing_col)
 
 if __name__ == '__main__':
     unittest.main()
