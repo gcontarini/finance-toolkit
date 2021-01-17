@@ -60,7 +60,7 @@ def CAGR(data, frequency='Y', only_business=True):
         freq_dict = {'D': 365, 'W': 52, 'M': 12, 'Y': 1}
     
     # Factor used to calculate CAGR
-    n = (series.shape[0] - 1)/ freq_dict[frequency]
+    n = (series.shape[0] - 1) 1/ freq_dict[frequency]
     
     # Store temporary values
     tmp_df = pd.DataFrame()
@@ -73,19 +73,22 @@ def CAGR(data, frequency='Y', only_business=True):
 
     return CAGR
 
-def volatility(data, frequency='D'):
+def volatility(data, frequency='Y', only_business=True):
     """ 
-    Calculate volatility (standard deviation) for returns on a
-    given asset.
+    Calculate volatility (standard deviation annualized)
+    for returns on a given asset.
     Parameters
     ----------
     data: pd.Series/pd.DataFrame
-        Series contaning close prices for an asset. Also possible to input a dataframe,
-        must contain a close column.
+        Series contaning close prices for an asset. Also possible
+        to input a dataframe, must contain a close column.
     frequency: string
         D for daily prices
         W for weekly prices
         M for monthly prices
+        Y for yearly prices
+    only_business: bool
+        When using daily data count only business days.
     Returns
     ----------
     float
@@ -113,11 +116,16 @@ def volatility(data, frequency='D'):
         raise TypeError('Input data is not a pandas Series or DataFrame.')
 
     # Handles parameter input
-    if not frequency in ('D', 'W', 'M'): 
+    if not frequency in ('D', 'W', 'M', 'Y'): 
         raise ValueError('Invalid option for data frequency.')
+    if not isinstance(only_business, bool):
+        raise TypeError('Value for only_business must be a boolean.')
 
     # Map frequency strings to values
-    freq_dict = {'D': 252, 'W': 52, 'M': 12}
+    if only_business:
+        freq_dict = {'D': 252, 'W': 52, 'M': 12, 'Y': 1}
+    else:
+        freq_dict = {'D': 365, 'W': 52, 'M': 12, 'Y': 1}
 
     # Annualization factor
     n_sqrt = np.sqrt(freq_dict[frequency])
@@ -126,7 +134,7 @@ def volatility(data, frequency='D'):
     tmp_df = pd.DataFrame()
     
     tmp_df['returns'] = series.pct_change()
-    volatility = tmp_df['returns'].std() * n_sqrt
+    volatility = tmp_df['returns'].std()dat * n_sqrt
     
     return volatility
 
