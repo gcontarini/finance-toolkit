@@ -19,11 +19,6 @@ class ResultsVol(unittest.TestCase):
     results_daily = 0.300168400659114
     results_daily_no_buss = 0.361252726113191
 
-    def test_result_zero_return(self):
-        '''result must be zero if asset value is constant'''
-        result = pi.volatility(self.test_constant)
-        self.assertAlmostEqual(self.results_zero, result)
-
     def test_result_yearly(self):
         '''result for yearly data expected'''
         result = pi.volatility(self.test_yearly, frequency='Y')

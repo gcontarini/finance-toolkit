@@ -32,7 +32,7 @@ def CAGR(data, frequency='Y', only_business=True):
         # All possibles names for close column
         possible_cols = ['Close', 'close', 'Adj Close', 'adj close']
         # Select them
-        cols = cols = [col for col in data.columns if col in possible_cols]
+        cols = [col for col in data.columns if col in possible_cols]
         # Check if there's only one close column
         if len(cols) > 1:
             raise KeyError('Ambiguous number of possible close prices column.')
@@ -60,7 +60,7 @@ def CAGR(data, frequency='Y', only_business=True):
         freq_dict = {'D': 365, 'W': 52, 'M': 12, 'Y': 1}
     
     # Factor used to calculate CAGR
-    n = (series.shape[0] - 1) 1/ freq_dict[frequency]
+    n = (series.shape[0] - 1) / freq_dict[frequency]
     
     # Store temporary values
     tmp_df = pd.DataFrame()
@@ -100,7 +100,7 @@ def volatility(data, frequency='Y', only_business=True):
         # All possibles names for close column
         possible_cols = ['Close', 'close', 'Adj Close', 'adj close']
         # Select them
-        cols = cols = [col for col in data.columns if col in possible_cols]
+        cols = [col for col in data.columns if col in possible_cols]
         # Check if there's only one close column
         if len(cols) > 1:
             raise KeyError('Ambiguous number of possible close prices column.')
@@ -134,24 +134,25 @@ def volatility(data, frequency='Y', only_business=True):
     tmp_df = pd.DataFrame()
     
     tmp_df['returns'] = series.pct_change()
-    volatility = tmp_df['returns'].std()dat * n_sqrt
+    volatility = tmp_df['returns'].std() * n_sqrt
     
     return volatility
 
-def sharpe(data, rf_rate, frequency='D'):
+def sharpe(data, rf_rate, frequency='Y', only_business=True):
     """ 
     Calculate sharpe ratio.
     Parameters
     ----------
     data: pd.Series/pd.DataFrame
-        Series contaning close prices for an asset. Also possible to input a dataframe,
-        must contain a close column.
+        Series contaning close prices for an asset. Also possible
+        to input a dataframe, must contain a close column.
     rf_rate: float
         Risk free rate.
     frequency: string
         D for daily prices
         W for weekly prices
         M for monthly prices
+        Y for yearly prices
     Returns
     ----------
     float
@@ -163,7 +164,7 @@ def sharpe(data, rf_rate, frequency='D'):
         # All possibles names for close column
         possible_cols = ['Close', 'close', 'Adj Close', 'adj close']
         # Select them
-        cols = cols = [col for col in data.columns if col in possible_cols]
+        cols = [col for col in data.columns if col in possible_cols]
         # Check if there's only one close column
         if len(cols) > 1:
             raise KeyError('Ambiguous number of possible close prices column.')
@@ -179,29 +180,41 @@ def sharpe(data, rf_rate, frequency='D'):
         raise TypeError('Input data is not a pandas Series or DataFrame.')
 
     # Handles parameter input
-    if not frequency in ('D', 'W', 'M'): 
+    if not frequency in ('D', 'W', 'M', 'Y'): 
         raise ValueError('Invalid option for data frequency.')
+    if not isinstance(only_business, bool):
+        raise TypeError('Value for only_business must be a boolean.')
     if not isinstance(rf_rate, float):
         raise TypeError('rf_rate parameter is not float type.')
-    
-    sharpe_ratio = (CAGR(series, frequency) - rf_rate) / volatility(series, frequency)
+    if rf_rate > 1 or rf_rate < 0:
+        raise ValueError('rf_rate must positive and equal or less than 1.')
+
+    cagr = CAGR(series, frequency, only_business)
+    vol = volatility(series, frequency, only_business)
+
+    # Handles division by zero
+    if vol == 0:
+        raise ZeroDivisionError('Volatility cannot be equal to zero.')
+
+    sharpe_ratio = (cagr - rf_rate) / vol
     
     return sharpe_ratio
 
-def sortino(data, rf_rate, frequency='D'):
+def sortino(data, rf_rate, frequency='Y', only_business=True):
     """ 
     Calculate sortino ratio.
     Parameters
     ----------
     data: pd.Series/pd.DataFrame
-        Series contaning close prices for an asset. Also possible to input a dataframe,
-        must contain a close column.
+        Series contaning close prices for an asset. Also possible
+        to input a dataframe, must contain a close column.
     rf_rate: float
         Risk free rate.
     frequency: string
         D for daily prices
         W for weekly prices
         M for monthly prices
+        Y for yearly prices
     Returns
     ----------
     float
@@ -213,7 +226,7 @@ def sortino(data, rf_rate, frequency='D'):
         # All possibles names for close column
         possible_cols = ['Close', 'close', 'Adj Close', 'adj close']
         # Select them
-        cols = cols = [col for col in data.columns if col in possible_cols]
+        cols = [col for col in data.columns if col in possible_cols]
         # Check if there's only one close column
         if len(cols) > 1:
             raise KeyError('Ambiguous number of possible close prices column.')
@@ -229,20 +242,33 @@ def sortino(data, rf_rate, frequency='D'):
         raise TypeError('Input data is not a pandas Series or DataFrame.')
 
     # Handles parameter input
-    if not frequency in ('D', 'W', 'M'): 
+    if not frequency in ('D', 'W', 'M', 'Y'): 
         raise ValueError('Invalid option for data frequency.')
+    if not isinstance(only_business, bool):
+        raise TypeError('Value for only_business must be a boolean.')
     if not isinstance(rf_rate, float):
         raise TypeError('rf_rate parameter is not float type.')
+    if rf_rate > 1 or rf_rate < 0:
+        raise ValueError('rf_rate must positive and equal or less than 1.')
     
     # Map frequency strings to values
-    freq_dict = {'D': 252, 'W': 52, 'M': 12}
+    if only_business:
+        freq_dict = {'D': 252, 'W': 52, 'M': 12, 'Y': 1}
+    else:
+        freq_dict = {'D': 365, 'W': 52, 'M': 12, 'Y': 1}
 
     tmp_df = pd.DataFrame()
 
     tmp_df['returns'] = series.pct_change()
     neg_vol = tmp_df.loc[tmp_df['returns'] < 0, 'returns'].std() * np.sqrt(freq_dict[frequency])
-    
-    sortino_ratio = (CAGR(series, frequency) - rf_rate) / neg_vol
+
+    # Handles division by zero
+    if neg_vol == 0:
+        raise ZeroDivisionError('Volatility cannot be equal to zero.')
+
+    cagr = CAGR(series, frequency, only_business)
+
+    sortino_ratio = (cagr - rf_rate) / neg_vol
     
     return sortino_ratio
 
@@ -265,7 +291,7 @@ def max_dd(data):
         # All possibles names for close column
         possible_cols = ['Close', 'close', 'Adj Close', 'adj close']
         # Select them
-        cols = cols = [col for col in data.columns if col in possible_cols]
+        cols = [col for col in data.columns if col in possible_cols]
         # Check if there's only one close column
         if len(cols) > 1:
             raise KeyError('Ambiguous number of possible close prices column.')
@@ -317,7 +343,7 @@ def calmar(data, frequency='D'):
         # All possibles names for close column
         possible_cols = ['Close', 'close', 'Adj Close', 'adj close']
         # Select them
-        cols = cols = [col for col in data.columns if col in possible_cols]
+        cols = [col for col in data.columns if col in possible_cols]
         # Check if there's only one close column
         if len(cols) > 1:
             raise KeyError('Ambiguous number of possible close prices column.')
