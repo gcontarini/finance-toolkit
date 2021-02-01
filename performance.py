@@ -200,77 +200,80 @@ def sharpe(data, rf_rate, frequency='Y', only_business=True):
     
     return sharpe_ratio
 
-def sortino(data, rf_rate, frequency='Y', only_business=True):
-    """ 
-    Calculate sortino ratio.
-    Parameters
-    ----------
-    data: pd.Series/pd.DataFrame
-        Series contaning close prices for an asset. Also possible
-        to input a dataframe, must contain a close column.
-    rf_rate: float
-        Risk free rate.
-    frequency: string
-        D for daily prices
-        W for weekly prices
-        M for monthly prices
-        Y for yearly prices
-    Returns
-    ----------
-    float
-        sortino ratio
-    """
+# Something is not right in this logic
+# TODO: fix it
+# def sortino(data, rf_rate, frequency='Y', only_business=True):
+#     """ 
+#     Calculate sortino ratio.
+#     Parameters
+#     ----------
+#     data: pd.Series/pd.DataFrame
+#         Series contaning close prices for an asset. Also possible
+#         to input a dataframe, must contain a close column.
+#     rf_rate: float
+#         Risk free rate.
+#     frequency: string
+#         D for daily prices
+#         W for weekly prices
+#         M for monthly prices
+#         Y for yearly prices
+#     Returns
+#     ----------
+#     float
+#         sortino ratio
+#     """
     
-    # Handles input data
-    if isinstance(data, pd.DataFrame):
-        # All possibles names for close column
-        possible_cols = ['Close', 'close', 'Adj Close', 'adj close']
-        # Select them
-        cols = [col for col in data.columns if col in possible_cols]
-        # Check if there's only one close column
-        if len(cols) > 1:
-            raise KeyError('Ambiguous number of possible close prices column.')
-        elif len(cols) == 0:
-            raise IndexError('No close column. Pass desired column as a pd.Series.')
-        # Copy data as series
-        series = data[cols[0]].copy()
+#     # Handles input data
+#     if isinstance(data, pd.DataFrame):
+#         # All possibles names for close column
+#         possible_cols = ['Close', 'close', 'Adj Close', 'adj close']
+#         # Select them
+#         cols = [col for col in data.columns if col in possible_cols]
+#         # Check if there's only one close column
+#         if len(cols) > 1:
+#             raise KeyError('Ambiguous number of possible close prices column.')
+#         elif len(cols) == 0:
+#             raise IndexError('No close column. Pass desired column as a pd.Series.')
+#         # Copy data as series
+#         series = data[cols[0]].copy()
 
-    elif isinstance(data, pd.Series):
-        series = data.copy()
+#     elif isinstance(data, pd.Series):
+#         series = data.copy()
     
-    else:
-        raise TypeError('Input data is not a pandas Series or DataFrame.')
+#     else:
+#         raise TypeError('Input data is not a pandas Series or DataFrame.')
 
-    # Handles parameter input
-    if not frequency in ('D', 'W', 'M', 'Y'): 
-        raise ValueError('Invalid option for data frequency.')
-    if not isinstance(only_business, bool):
-        raise TypeError('Value for only_business must be a boolean.')
-    if not isinstance(rf_rate, float):
-        raise TypeError('rf_rate parameter is not float type.')
-    if rf_rate > 1 or rf_rate < 0:
-        raise ValueError('rf_rate must positive and equal or less than 1.')
+#     # Handles parameter input
+#     if not frequency in ('D', 'W', 'M', 'Y'): 
+#         raise ValueError('Invalid option for data frequency.')
+#     if not isinstance(only_business, bool):
+#         raise TypeError('Value for only_business must be a boolean.')
+#     if not isinstance(rf_rate, float):
+#         raise TypeError('rf_rate parameter is not float type.')
+#     if rf_rate > 1 or rf_rate < 0:
+#         raise ValueError('rf_rate must positive and equal or less than 1.')
     
-    # Map frequency strings to values
-    if only_business:
-        freq_dict = {'D': 252, 'W': 52, 'M': 12, 'Y': 1}
-    else:
-        freq_dict = {'D': 365, 'W': 52, 'M': 12, 'Y': 1}
+#     # Map frequency strings to values
+#     if only_business:
+#         freq_dict = {'D': 252, 'W': 52, 'M': 12, 'Y': 1}
+#     else:
+#         freq_dict = {'D': 365, 'W': 52, 'M': 12, 'Y': 1}
 
-    tmp_df = pd.DataFrame()
+#     tmp_df = pd.DataFrame()
 
-    tmp_df['returns'] = series.pct_change()
-    neg_vol = tmp_df.loc[tmp_df['returns'] < 0, 'returns'].std() * np.sqrt(freq_dict[frequency])
+#     tmp_df['returns'] = series.pct_change()
+#     # Implement this formula with excel
+#     neg_vol = tmp_df.loc[tmp_df['returns'] < 0, 'returns'].std() * np.sqrt(freq_dict[frequency])
 
-    # Handles division by zero
-    if neg_vol == 0:
-        raise ZeroDivisionError('Volatility cannot be equal to zero.')
+#     # Handles division by zero
+#     if neg_vol == 0:
+#         raise ZeroDivisionError('Volatility cannot be equal to zero.')
 
-    cagr = CAGR(series, frequency, only_business)
+#     cagr = CAGR(series, frequency, only_business)
 
-    sortino_ratio = (cagr - rf_rate) / neg_vol
+#     sortino_ratio = (cagr - rf_rate) / neg_vol
     
-    return sortino_ratio
+#     return sortino_ratio
 
 def max_dd(data):
     """ 
