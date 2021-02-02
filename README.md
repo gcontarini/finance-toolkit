@@ -35,8 +35,6 @@ Using docker container:
 - Run
 ```
 docker built -t finance-toolkit-tests .
-```
-```
 docker run finance-toolkit-tests
 ```
 
