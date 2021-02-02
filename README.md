@@ -30,23 +30,23 @@ My goal in doing this project is to organize and share some functions that I've 
 
 ## How to test
 Using docker container:
-    - Clone the repo
-    - Move to repository
-    - Run
-    ```
-    docker built -t finance-toolkit-tests .
-    ```
-    ```
-    docker run finance-toolkit-tests
-    ```
+- Clone the repo
+- Move to repository
+- Run
+```
+docker built -t finance-toolkit-tests .
+```
+```
+docker run finance-toolkit-tests
+```
 
 Not using docker:
-    - Clone the repo
-    - Move to repository
-    - Run
-    ```
-    python3 -m unittest discover -s tests/ -p '*_test.py'
-    ```
+- Clone the repo
+- Move to repository
+- Run
+```
+python3 -m unittest discover -s tests/ -p '*_test.py'
+```
 
 ## Afterthoughts
 I believe I have accomplished my goals with this project. There're other functions that I want to implement but right now let's move on to other projects. The tests could have been better implemented, especially the technical indicators tests which I implemented first. I learned a lot about the unittest module and how to use docker in this context.
