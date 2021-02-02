@@ -1,7 +1,13 @@
+import os
 import unittest
 import numpy as np
 import pandas as pd
 from context import performance as pi
+
+# Change working directory
+# This enable running tests from repository root
+if os.getcwd() != os.path.abspath(os.path.dirname(__file__)):
+    os.chdir('tests/')
 
 # Test results
 class ResultsCAGR(unittest.TestCase):

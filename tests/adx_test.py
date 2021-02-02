@@ -1,6 +1,12 @@
+import os
 import unittest
 import pandas as pd
 from context import technical as ti
+
+# Change working directory
+# This enable running tests from repository root
+if os.getcwd() != os.path.abspath(os.path.dirname(__file__)):
+    os.chdir('tests/')
 
 # Test results
 class ResultsADX(unittest.TestCase):
