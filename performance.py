@@ -323,7 +323,7 @@ def max_dd(data):
     
     return max_drawdown
 
-def calmar(data, frequency='D'):
+def calmar(data, frequency='Y', only_business=True):
     """ 
     Calculate calmar ratio.
     Parameters
@@ -335,6 +335,9 @@ def calmar(data, frequency='D'):
         D for daily prices
         W for weekly prices
         M for monthly prices
+        Y for yearly prices
+    only_business: bool
+        When using daily data count only business days.
     Returns
     ----------
     float
@@ -362,11 +365,11 @@ def calmar(data, frequency='D'):
         raise TypeError('Input data is not a pandas Series or DataFrame.')
 
     # Handles parameter input
-    if not frequency in ('D', 'W', 'M'): 
+    if not frequency in ('D', 'W', 'M', 'Y'): 
         raise ValueError('Invalid option for data frequency.')
+    if not isinstance(only_business, bool):
+        raise TypeError('Value for only_business must be a boolean.')
 
-    tmp_df = pd.DataFrame()
-
-    calmar_ratio = CAGR(series, frequency) / max_dd(series)
+    calmar_ratio = CAGR(series, frequency, only_business) / max_dd(series)
     
     return calmar_ratio
