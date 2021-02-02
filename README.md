@@ -30,18 +30,20 @@ My goal in doing this project is to organize and share some functions that I've 
 
 ## How to test
 Using docker container:
-    Clone the repo
-    Move to repository
-    Run
+    - Clone the repo
+    - Move to repository
+    - Run
     ```
     docker built -t finance-toolkit-tests .
+    ```
+    ```
     docker run finance-toolkit-tests
     ```
 
 Not using docker:
-    Clone the repo
-    Move to repository
-    Run
+    - Clone the repo
+    - Move to repository
+    - Run
     ```
     python3 -m unittest discover -s tests/ -p '*_test.py'
     ```
